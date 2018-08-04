@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import os
-usr_input = str(input('Digite a série: '))
+usr_input = str(input('Show Name: '))
 def get_tpb(search_query):#Procura na página do tpb
     search_query = search_query.replace(" ", "%20").replace("'", '')
     down_source = requests.get('https://thepiratebay.org/search/' + search_query).text
@@ -21,7 +21,7 @@ def Main():
                 name = each_show.text
                 query_results= get_tpb(name)
                 if query_results.find('a', title='Download this torrent using magnet') is None:
-                    print('Não há link de Download/Não foi lançado')
+                    print('Not Released yet/No Download link')
                 else:
                     down_mag = query_results.find('a', title='Download this torrent using magnet')['href']
                     seeders = query_results.find('td',align='right').text
