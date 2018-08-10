@@ -1,8 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
 import os
-class_types = ['day','day past']
-
 
 usr_input = str(input('Show Name: '))
 def get_tpb(search_query):#Procura na página do tpb
@@ -16,22 +14,21 @@ def Main():
     soup = BeautifulSoup(source, "html5lib")
     
     #Busca a Semana
-    for i in range(len(class_types)):
-        for each_day in soup.find_all('div', class_=class_types[i]):
-            date_week = each_day.find('div', class_="date").text
+    for each_day in soup.find_all('div', class_='day'):
+        date_week = each_day.find('div', class_="date").text
             #Busca em cada semana as Séries com Episódios
-            for each_show in each_day.find_all('div' , class_='title'):
-                if usr_input in each_show.text:
-                    print('\n' + '=== ' + date_week + ' ===' + '\n')
-                    print('- '+each_show.text)
-                    name = each_show.text
-                    query_results= get_tpb(name)
-                    if query_results.find('a', title='Download this torrent using magnet') is None:
-                        print('Not Released yet/No Download link')
-                    else:
-                        down_mag = query_results.find('a', title='Download this torrent using magnet')['href']
-                        seeders = query_results.find('td',align='right').text
-                        print(down_mag + '\n' + 'Seeders: ' + seeders)
+        for each_show in each_day.find_all('div' , class_='title'):
+            if usr_input.upper() in each_show.text.upper():
+                print('\n' + '=== ' + date_week + ' ===' + '\n')
+                print('- '+each_show.text)
+                name = each_show.text
+                query_results= get_tpb(name)
+                if query_results.find('a', title='Download this torrent using magnet') is None:
+                    print('Not Released yet/No Download link')
+                else:
+                    down_mag = query_results.find('a', title='Download this torrent using magnet')['href']
+                    seeders = query_results.find('td',align='right').text
+                    print(down_mag + '\n' + 'Seeders: ' + seeders)
         
     os.system("pause")
 Main()
