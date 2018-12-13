@@ -12,13 +12,14 @@ def get_tpb(search_query):#Procura na página do tpb
 def Main():
     source = requests.get('http://www.airdates.tv/').text
     soup = BeautifulSoup(source, "html5lib")
-    
+    a = 0
     #Busca a Semana
     for each_day in soup.find_all('div', class_='day'):
         date_week = each_day.find('div', class_="date").text
             #Busca em cada semana as Séries com Episódios
         for each_show in each_day.find_all('div' , class_='title'):
             if usr_input.upper() in each_show.text.upper():
+                a = a+1
                 print('\n' + '=== ' + date_week + ' ===' + '\n')
                 print('- '+each_show.text)
                 name = each_show.text
@@ -29,6 +30,6 @@ def Main():
                     down_mag = query_results.find('a', title='Download this torrent using magnet')['href']
                     seeders = query_results.find('td',align='right').text
                     print(down_mag + '\n' + 'Seeders: ' + seeders)
-        
-    os.system("pause")
+                    
+    if a == 0 : print('\n'+'Nothing was found for '+"'"+usr_input+"'")          
 Main()
